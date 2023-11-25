@@ -16,7 +16,7 @@ class Parser:
             self.move()
             output = [operator, self.boolean_expression()]
             return output
-
+        
         elif self.token.type.startswith("VAR"):
             return self.token
         elif self.token.value == "+" or self.token.value == "-":
@@ -25,11 +25,11 @@ class Parser:
             operand = self.boolean_expression()
 
             return [operator, operand]
-
+    
     def term(self):
         left_node = self.factor()
         self.move()
-
+        
         while self.token.value == "*" or self.token.value == "/":
             operator = self.token
             self.move()
@@ -49,7 +49,7 @@ class Parser:
         if self.token.value == "do":
             self.move()
             action = self.statement()
-
+        
             return condition, action
         elif self.tokens[self.idx-1].value == "do":
             action = self.statement()
@@ -76,16 +76,16 @@ class Parser:
             return [conditions, actions, else_action]
 
         return [conditions, actions]
-
+    
     def while_statement(self):
         self.move()
         condition = self.boolean_expression()
-
+        
         if self.token.value == "do":
             self.move()
             action = self.statement()
             return [condition, action]
-
+        
         elif self.tokens[self.idx-1].value == "do":
             action = self.statement()
             return [condition, action]
@@ -97,7 +97,7 @@ class Parser:
             self.move()
             right_node = self.expression()
             left_node = [left_node, operator, right_node]
-
+        
         return left_node
 
     def boolean_expression(self):
@@ -120,11 +120,11 @@ class Parser:
             left_node = [left_node, operator, right_node]
 
         return left_node
-
+    
     def variable(self):
         if self.token.type.startswith("VAR"):
             return self.token
-
+    
     def statement(self):
         if self.token.type == "DECL":
             # Variable assignment
@@ -141,12 +141,12 @@ class Parser:
         elif self.token.type == "INT" or self.token.type == "FLT" or self.token.type == "OP" or self.token.value == "not":
             # Arithmetic expression
             return self.boolean_expression()
-
+        
         elif self.token.value == "if":
             return [self.token, self.if_statements()]
         elif self.token.value == "while":
             return [self.token, self.while_statement()]
-
+        
     def parse(self):
         return self.statement()
 
